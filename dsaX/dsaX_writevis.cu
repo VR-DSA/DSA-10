@@ -1,4 +1,10 @@
 // -*- c++ -*-
+/* This works pretty much like the trigger code. receives a control UDP message 
+to store some data for a fixed amount of time.
+Message format: SOURCE_NAME-length(s)
+Will ignore messages until data recording is over
+*/
+
 #include <iostream>
 #include <algorithm>
 using std::cout;
@@ -15,7 +21,10 @@ using std::endl;
 #include <netinet/in.h>
 #include <time.h>
 #include <arpa/inet.h>
+#include <sys/syscall.h>
 
+#include "sock.h"
+#include "tmutil.h"
 #include "dada_client.h"
 #include "dada_def.h"
 #include "dada_hdu.h"
@@ -24,44 +33,31 @@ using std::endl;
 #include "ipcbuf.h"
 #include "dada_affinity.h"
 #include "ascii_header.h"
-
+#include "dsaX_correlator_udpdb_thread.h"
 #include "fitsio.h"
 
-#define NINTS 100
-#define NCALCS 100
-const double diffobs = 3000.0;
+#define CONTROL_PORT 11224
+
+/* global variables */
+int quit_threads = 0;
+int dump_pending = 0;
+uint64_t specnum = 0;
+uint64_t procnum = 0;
+int trignum = 0;
+int dumpnum = 0;
+char iP[100];
+char footer_buf[1024];
 
 float summed_vis[27500];
 
-void dsaX_dbgpu_cleanup (dada_hdu_t * in, dada_hdu_t * out, multilog_t * log);
-
-int docrab(double *crabs, double samp);
-int docal(double *cals, double samp);
-
-int docrab(double *crabs, double samp) {
-
-  for (int i=0;i<NCALCS;i++)
-    if ((crabs[i]-samp<diffobs) && (crabs[i]-samp>-diffobs)) return 1;
-
-  return 0;
-
-}
-
-int docal(double *cals, double samp) {
-
-  for (int i=0;i<NCALCS;i++)
-    if ((cals[i]-samp<diffobs) && (cals[i]-samp>-diffobs)) return 1;
-
-  return 0;
-
-}
+void dsaX_dbgpu_cleanup (dada_hdu_t * in, multilog_t * log);
 
 void usage()
 {
   fprintf (stdout,
 	   "dsaX_image [options]\n"
 	   " -c core   bind process to CPU core\n"
-	   " -f filename [default test.fits]\n"
+	   " -f filename base [default test.fits]\n"
 	   " -o freq of chan 1 [default 1530.0]\n"
 	   " -h        print usage\n");
 }
