@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[135]:
+# In[1]:
 
 
 import astropy.units as u
@@ -13,7 +13,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 
 
-# In[136]:
+# In[16]:
 
 
 def get_alt_az_at_meridian(ra,dec, site,year,month,day):
@@ -32,7 +32,7 @@ def get_alt_az_at_meridian(ra,dec, site,year,month,day):
     source = SkyCoord(ra, dec, frame='icrs')
     start_time = dt.datetime(year=year, month=month, day=day, hour=0, minute=0)
     times = np.array([start_time + dt.timedelta(minutes=i) for i in xrange(1440)])
-    altaz_FRB = FRB.transform_to(AltAz(obstime=times,location=site))
+    altaz_FRB = source.transform_to(AltAz(obstime=times,location=site))
     altitude_at_meridian = np.max(altaz_FRB.alt)
     meridian_index = np.where(altaz_FRB.alt == altitude_at_meridian)[0]
     azimuth_at_meridian = altaz_FRB.az[meridian_index[0]]
@@ -63,10 +63,11 @@ def get_calibrators_in_beam(sources,pointing_az,pointing_alt,time,site,tolerance
     site: an EarthLocation object of where your observatory is
     Outputs:
     good_calibrators: An array of SkyCoord objects of calibrators that are in-beam"""
-    pointing = AltAz(obstime=time_now,az = meridian_az*u.degree,alt=meridian_alt*u.degree,location=site)
-    calibrator_separations = pointing.separation(calibrators_altaz)
+
+    pointing = AltAz(obstime=time_now,az = pointing_az*u.degree,alt=pointing_alt*u.degree,location=site)
+    calibrator_separations = pointing.separation(sources)
     calibrators_in_beam = np.where(calibrator_separations.degree < tolerance)[0]
-    good_calibrators = calibrators_altaz[calibrators_in_beam]
+    good_calibrators = sources[calibrators_in_beam]
     return good_calibrators
 
 def can_we_calibrate(ra, dec, latitude, longitude, elevation, pointing_year, pointing_month, pointing_day, calibrators_file,time, tolerance):
@@ -86,11 +87,11 @@ def can_we_calibrate(ra, dec, latitude, longitude, elevation, pointing_year, poi
     site = EarthLocation(lat = latitude, lon = longitude, height = elevation)
     meridian_alt, meridian_az = get_alt_az_at_meridian(ra = ra,dec = dec, site = site,year = pointing_year,month = pointing_month,day = pointing_day)
     calibrators_altaz = get_altaz_of_calibrators(calibrators_file = calibrators_file, site = site)
-    good_calibrators = get_calibrators_in_beam(sources=calibrators_altaz,pointing_az=meridian_az,pointing_alt=meridian_az,time=time,site=site, tolerance=tolerance)
+    good_calibrators = get_calibrators_in_beam(sources=calibrators_altaz,pointing_az=meridian_az,pointing_alt=meridian_alt,time=time,site=site, tolerance=tolerance)
     return good_calibrators
 
 
-# In[137]:
+# In[17]:
 
 
 if __name__ == '__main__':
@@ -102,7 +103,7 @@ if __name__ == '__main__':
     pointing_year = 2019
     pointing_month = 4
     pointing_day = 1
-    calibrators_file = "frb_calibrators.txt"
+    calibrators_file = "C:/Users/boche/Documents/Work/DSA/calibrators/frb_calibrators.txt"
     time_now = dt.datetime.now()
     tolerance = 3.5/np.cos(Angle(dec))
     good_calibrators = can_we_calibrate(ra,dec,latitude,longitude,elevation,pointing_year,pointing_month,pointing_day,calibrators_file,time_now,tolerance)
