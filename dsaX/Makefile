@@ -10,8 +10,8 @@ LIBS = -L/usr/local/lib -lpsrdada -L/usr/lib/gcc/x86_64-linux-gnu/5 -lgfortran
 dsaX_correlator_fanout: dsaX_correlator_fanout.cu
 	/usr/local/cuda-8.0/bin/nvcc -D CUDA -o $@ $^ -ccbin=g++ -I/usr/local/thrust/thrust -I/usr/local/psrdada/src -I/usr/local/include -L/usr/local/lib -lpsrdada -lm --gpu-architecture=sm_61 -O3 -L/usr/lib/gcc/x86_64-linux-gnu/5 -lgfortran
 
-dsaX_bispectrum: dsaX_bispectrum.cu
-	/usr/local/cuda-8.0/bin/nvcc -D CUDA -o $@ $^ -ccbin=g++ -I/usr/local/thrust/thrust -I/usr/local/psrdada/src -I/usr/local/include -L/usr/local/lib -lpsrdada -lm --gpu-architecture=sm_61 -O3 -L/usr/lib/gcc/x86_64-linux-gnu/5 -lgfortran  -lcfitsio
+dsaX_writevis: dsaX_writevis.c
+	gcc -o $@ $^ -I/usr/local/psrdada/src -I/usr/local/include -L/usr/local/lib -lpsrdada -lm -pthread -g -O2 -L/usr/lib/gcc/x86_64-linux-gnu/5 -lgfortran -lcfitsio
 
 dsaX_xgpu: dsaX_xgpu.cu
 	/usr/local/cuda-8.0/bin/nvcc -D CUDA -o $@ $^ -ccbin=g++ -I/usr/local/thrust/thrust -I/usr/local/psrdada/src -I/usr/local/include -I/usr/local/xGPU/src -L/usr/local/lib -lpsrdada -lm -lcfitsio --gpu-architecture=sm_61 -O3 -L/usr/lib/gcc/x86_64-linux-gnu/5 -lgfortran -lxgpu -Xcompiler -fopenmp
