@@ -161,6 +161,7 @@ int main (int argc, char *argv[]) {
   int core = -1;
   int nsamps = 384;
   float fch1 = 1530.0;
+  int nchans = 125;
   int npts = 55*125*2*2;
   int nsamps_gulp = 384;
   char fnam[300], foutnam[400];
@@ -326,6 +327,7 @@ int main (int argc, char *argv[]) {
 	fits_write_key(fptr, TDOUBLE, "MJD", &mjd, "Start MJD", &status);
 	fits_write_key(fptr, TFLOAT, "TSAMP", &mytsamp, "Sample time (s)", &status);
 	fits_write_key(fptr, TFLOAT, "FCH1", &fch1, "Frequency (MHz)", &status);
+	fits_write_key(fptr, TINT, "NCHAN", &nchans, "Channels", &status);
 	fits_write_key(fptr, TSTRING, "Antennas", &antennas[0], "Antennas", &status);
 	fits_write_key(fptr, TSTRING, "Source", &wsrcnam[0], "Source", &status);	  
 	if (status) multilog(log, LOG_ERR, "fits_write FITS error %d\n",status);
