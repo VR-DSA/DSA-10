@@ -36,6 +36,7 @@ struct hd_params {
   hd_float f0;             // Frequency of channel 0
   hd_float df;             // Frequency difference between channels
   hd_size  nsnap;          // number of SNAP inputs
+
   // Dedispersion parameters
   hd_float dm_min;         // Min DM to search from
   hd_float dm_max;         // Max DM to search to
@@ -44,6 +45,11 @@ struct hd_params {
   hd_size  dm_nbits;       // No. bits per sample for dedispersed time series
   bool     use_scrunching; // Whether to apply time-scrunching during dedispersion
   hd_float scrunch_tol;    // Smear tolerance factor for time scrunching
+  hd_size  repeaters;      // whether or not to do a fine dm search for repeaters.
+  hd_float dm_repeater_start;       // start dm for fine search of repeaters.
+  hd_float dm_repeater_stop;        // stop dm for fine search of repeaters.
+  unsigned long n_dms_repeater;          // number of dms to search for the repeater
+
   // RFI mitigation parameters
   hd_float rfi_tol;        // Probability of incorrectly identifying noise as RFI
   hd_size  rfi_min_beams;  // Min no. beams to identify coincident signals as RFI

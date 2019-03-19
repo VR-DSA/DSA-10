@@ -399,13 +399,60 @@ hd_error hd_create_pipeline(hd_pipeline* pipeline_, hd_params params) {
     return throw_dedisp_error(derror);
   }
   // TODO: Consider loading a pre-generated DM list instead for flexibility
+  //if (!pipeline->params.repeaters)
   derror = dedisp_generate_dm_list(pipeline->dedispersion_plan,
                                    pipeline->params.dm_min,
                                    pipeline->params.dm_max,
                                    pipeline->params.dm_pulse_width,
                                    pipeline->params.dm_tol);
+  if (pipeline->params.repeaters) {
+  //if we are searching for a repeater, insert finely spaced dms into the dm list
+    const float* dm_list_init  = dedisp_get_dm_list(pipeline->dedispersion_plan);  //get the old dm list
+    hd_size      dm_count_init = dedisp_get_dm_count(pipeline->dedispersion_plan); 
+    hd_size      dm_count_repeaters = dm_count_init + params.n_dms_repeater;
+    float dm_list_repeaters[dm_count_repeaters];  //initialize the new dm list
+    float dm = 0;
+    hd_size new_dms = 0; //to keep track of indices
+    hd_size repeater_dm_status = 0;
+    //loop over the old dm list
+    for (hd_size i=0;i<dm_count_init;i++)  {
+      dm = dm_list_init[i];
+      //look for the dm where you want to start looking for repeater dms
+      if (dm >= pipeline->params.dm_repeater_start && pipeline->params.dm_repeater_start > dm_list_init[i-1] )  {
+        repeater_dm_status = 1; //starting to insert finely spaced dms
+        double repeater_dm_spacing = ((double)(pipeline->params.dm_repeater_stop-pipeline->params.dm_repeater_start)/(double)(pipeline->params.n_dms_repeater-1));
+        // insert the finely spaced dms
+        for (hd_size j=0; j< pipeline->params.n_dms_repeater;j++)  {
+          float dm_repeater = pipeline->params.dm_repeater_start + repeater_dm_spacing*j;
+          dm_list_repeaters[i+j] = dm_repeater;
+        }
+      }
+      if (repeater_dm_status == 0) {
+        dm_list_repeaters[i] = dm; //if we haven't inserted dms yet, dm list is the same
+        new_dms += 1; 
+     }
+     //if there are dms in the old dm list that are between dm_repeater_start and dm_repeater_stop, skip them
+      else if (repeater_dm_status == 1) {
+        if (dm > pipeline->params.dm_repeater_stop) repeater_dm_status = 2;
+      }
+      //once the repeater dms have been inserted, the indexing needs to change to continue the dm list
+      else if (repeater_dm_status == 2) {
+        dm_list_repeaters[new_dms+pipeline->params.n_dms_repeater] = dm;
+        new_dms += 1;
+      }
+    }
+  hd_size new_dm_count_repeaters = new_dms+pipeline->params.n_dms_repeater; //final number of dms
+  const float * dm_list_repeaters_const = dm_list_repeaters; //convert to const float for dedisp_set_dm_list
+  derror = dedisp_set_dm_list(pipeline->dedispersion_plan,
+                              dm_list_repeaters_const,
+                              new_dm_count_repeaters);
   if( derror != DEDISP_NO_ERROR ) {
     return throw_dedisp_error(derror);
+  }
+  const float * final_dm_list = dedisp_get_dm_list(pipeline->dedispersion_plan);
+  for (hd_size i = 0; i<new_dm_count_repeaters; i++) {
+    cout << final_dm_list[i] << endl;
+  }
   }
   
   if( pipeline->params.use_scrunching ) {
@@ -728,9 +775,9 @@ hd_error hd_execute(hd_pipeline pl,
     // For each boxcar filter
     // Note: We cannot detect pulse widths < current time resolution
 
-    for( hd_size filter_width=min_filter_width;
+    for( hd_size filter_width=1;
          filter_width<=pl->params.boxcar_max;
-         filter_width++ ) {
+         filter_width*=2 ) {
       hd_size rel_filter_width = filter_width / cur_dm_scrunch;
       
       if( pl->params.verbosity >= 4 ) {
@@ -1041,11 +1088,11 @@ hd_error hd_execute(hd_pipeline pl,
 	 std::copy(pl->h_clean_filterbank.begin()+s1*(pl->params.nchans*nbits/8),pl->h_clean_filterbank.begin()+s2*(pl->params.nchans*nbits/8),output_data.begin());
 	 
 	 // run parameter finder
-	 brain(output_data, (int)(s2-s1), (int)(h_group_filter_inds[i]+1), (float)(h_group_peaks[i]), (float)(h_group_dms[i]), &S1, &S2);
+	 //brain(output_data, (int)(s2-s1), (int)(h_group_filter_inds[i]+1), (float)(h_group_peaks[i]), (float)(h_group_dms[i]), &S1, &S2);
 	 stop_timer(clean_timer);
 
 	 // if S1 and S2 are ok
-	 if (S1>0.6 && S2<0.3 && h_group_peaks[i]<7.3) {
+	 /*if (S1>0.6 && S2<0.3 && h_group_peaks[i]<7.3) {
 
 	   // find peak SNR so we're only dumping one per block
 	   if (h_group_peaks[i]>maxSNR) {
@@ -1055,8 +1102,8 @@ hd_error hd_execute(hd_pipeline pl,
 	   // record output
 	   fprintf(cands_out,"%g %lu %g %d %d %g %d %lu %g %g\n",h_group_peaks[i],samp_idx,samp_idx * pl->params.dt,h_group_filter_inds[i],h_group_dm_inds[i],h_group_dms[i],h_group_members[i],first_idx+h_group_inds[i],S1,S2);
 
-	 }
-	 else if (S1>0.3 && S2<0.7 && h_group_peaks[i]>7.3) {
+	 }*/
+	 //else if (S1>0.3 && S2<0.7 && h_group_peaks[i]>7.3) {
 
 	   // find peak SNR so we're only dumping one per block
 	   if (h_group_peaks[i]>maxSNR) {
@@ -1064,13 +1111,14 @@ hd_error hd_execute(hd_pipeline pl,
 	     maxI = i;
 	   }
 	   // record output
-	   fprintf(cands_out,"%g %lu %g %d %d %g %d %lu %g %g\n",h_group_peaks[i],samp_idx,samp_idx * pl->params.dt,h_group_filter_inds[i],h_group_dm_inds[i],h_group_dms[i],h_group_members[i],first_idx+h_group_inds[i],S1,S2);
-	 }   
+	   //fprintf(cands_out,"%g %lu %g %d %d %g %d %lu %g %g\n",h_group_peaks[i],samp_idx,samp_idx * pl->params.dt,h_group_filter_inds[i],h_group_dm_inds[i],h_group_dms[i],h_group_members[i],first_idx+h_group_inds[i],S1,S2);
+	fprintf(cands_out,"%g %lu %g %d %d %g %d %lu %g %g\n",h_group_peaks[i],samp_idx,samp_idx * pl->params.dt,h_group_filter_inds[i],h_group_dm_inds[i],h_group_dms[i],h_group_members[i],first_idx+h_group_inds[i],0,0);
+	 //}   
 	 // else record output with bad S1 and S2
-	 else
-	   fprintf(cands_out,"%g %lu %g %d %d %g %d %lu %g %g\n",h_group_peaks[i],samp_idx,samp_idx * pl->params.dt,h_group_filter_inds[i],h_group_dm_inds[i],h_group_dms[i],h_group_members[i],first_idx+h_group_inds[i],S1,S2);
+	// else
+	//   fprintf(cands_out,"%g %lu %g %d %d %g %d %lu %g %g\n",h_group_peaks[i],samp_idx,samp_idx * pl->params.dt,h_group_filter_inds[i],h_group_dm_inds[i],h_group_dms[i],h_group_members[i],first_idx+h_group_inds[i],S1,S2);
 	   
-       }
+       }//
 
        // if pulse is not dump-able
        else

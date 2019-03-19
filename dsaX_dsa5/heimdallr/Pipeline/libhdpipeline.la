@@ -5,10 +5,10 @@
 # It is necessary for linking the library.
 
 # The name that we can dlopen(3).
-dlname=''
+dlname='libhdpipeline.so.0'
 
 # Names of this library.
-library_names=''
+library_names='libhdpipeline.so.0.0.0 libhdpipeline.so.0 libhdpipeline.so'
 
 # The name of the static archive.
 old_library='libhdpipeline.a'
@@ -17,7 +17,7 @@ old_library='libhdpipeline.a'
 inherited_linker_flags=''
 
 # Libraries that this one depends upon.
-dependency_libs=''
+dependency_libs=' -L/home/cbochenek/.local/lib'
 
 # Names of additional weak libraries provided by this library
 weak_library_names=''
@@ -38,4 +38,4 @@ dlopen=''
 dlpreopen=''
 
 # Directory that this library needs to be installed in:
-libdir='/usr/local/heimdallr/lib'
+libdir='/home/cbochenek/.local/lib'

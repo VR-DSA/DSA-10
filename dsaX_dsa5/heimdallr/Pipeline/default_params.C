@@ -44,6 +44,10 @@ void hd_set_default_params(hd_params* params) {
 	params->cand_rfi_dm_cut = 1.5;
 	//params->cand_min_members = 3;
 	params->nsnap = 1; // number of SNAPs
+	params->repeaters = 0; //search for repeaters or not. 0 for no, 1 for yes.
+	params->dm_repeater_start = 180.; //start dm for fine search of repeaters.
+	params->dm_repeater_stop = 200.; //stop dm for fine search of repeaters.
+	params->n_dms_repeater = 20.; //number of dms to search for the repeater.
   
   // TODO: This still needs tuning!
   params->max_giant_rate  = 200000;      // Max allowed giants per minute, 0 == no limit
