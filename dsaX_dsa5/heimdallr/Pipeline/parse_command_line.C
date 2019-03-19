@@ -74,6 +74,16 @@ int hd_parse_command_line(int argc, char* argv[], hd_params* params)
     else if( argv[i] == string("-dm_nbits") ) {
       params->dm_nbits = atoi(argv[++i]);
     }
+    else if( argv[i] == string("-repeaters") ) {
+      params->repeaters = 1;
+    }
+    else if( argv[i] == string("-dm_repeater") ) {
+     params->dm_repeater_start = atof(argv[++i]);
+     params->dm_repeater_stop = atof(argv[++i]);
+    }
+    else if( argv[i] == string("-n_dms_repeater") ) {
+      params->n_dms_repeater = atoi(argv[++i]);
+    }
     else if( argv[i] == string("-gpu_id") ) {
       params->gpu_id = atoi(argv[++i]);
     }
@@ -190,4 +200,7 @@ void hd_print_usage()
   cout << "    -boxcar_max num          TBA" << endl;
   cout << "    -fswap                   Swap channel ordering for negative DM - SIGPROC 2,4 or 8 bit only" << endl;
   cout << "    -min_tscrunch_width num  vary between high quality (large value) and high performance (low value)" << endl;
+  cout << "    -repeaters               Whether to do a fine DM search around the DM of a repeater [no]" << endl;
+  cout << "    -dm_repeaters min max    DM range to search for repeaters" << endl;
+  cout << "    -n_dms_repeater          Number of DMs to try for the repeater" << endl;           
 }

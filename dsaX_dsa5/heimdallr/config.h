@@ -51,10 +51,10 @@
 #define HAVE_NETINET_IN_H 1
 
 /* Define to 1 if you have the `pow' function. */
-#define HAVE_POW 1
+/* #undef HAVE_POW */
 
 /* Define if the PSRDADA Library is present */
-#define HAVE_PSRDADA 1
+/* #undef HAVE_PSRDADA */
 
 /* Define to 1 if your system has a GNU libc compatible `realloc' function,
    and to 0 otherwise. */
@@ -64,7 +64,7 @@
 #define HAVE_SOCKET 1
 
 /* Define to 1 if you have the `sqrt' function. */
-#define HAVE_SQRT 1
+/* #undef HAVE_SQRT */
 
 /* Define to 1 if `stat' has the bug that it succeeds when given the
    zero-length file name argument. */
@@ -139,6 +139,9 @@
 
 /* Define to the sub-directory where libtool stores uninstalled libraries. */
 #define LT_OBJDIR ".libs/"
+
+/* Define to 1 if your C compiler doesn't accept -c and -o together. */
+/* #undef NO_MINUS_C_MINUS_O */
 
 /* Name of package */
 #define PACKAGE "heimdall"
