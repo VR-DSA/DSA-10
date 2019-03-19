@@ -56,7 +56,7 @@ install:
 .PHONY: clean
 
 clean:
-	rm -f *.o dsaX_dbnic dsaX_nicdb dsaX_correlator_fanout dsaX_final dsaX_massager dsaX_xgpu dsaX_single dsaX_fancy
+	rm -f *.o *.~ dsaX_dbnic dsaX_nicdb dsaX_correlator_fanout dsaX_final dsaX_massager dsaX_xgpu dsaX_single dsaX_fancy
 
 
 

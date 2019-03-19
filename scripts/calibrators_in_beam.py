@@ -103,7 +103,8 @@ if __name__ == '__main__':
     pointing_year = 2019
     pointing_month = 4
     pointing_day = 1
-    calibrators_file = "C:/Users/boche/Documents/Work/DSA/calibrators/frb_calibrators.txt"
+    #calibrators_file = "C:/Users/boche/Documents/Work/DSA/calibrators/frb_calibrators.txt"
+    calibrators_file = "frb_calibrators.txt"
     time_now = dt.datetime.now()
     tolerance = 3.5/np.cos(Angle(dec))
     good_calibrators = can_we_calibrate(ra,dec,latitude,longitude,elevation,pointing_year,pointing_month,pointing_day,calibrators_file,time_now,tolerance)
