@@ -76,7 +76,7 @@ def config10g(SNAP):
         dest_mac1 = 40175247654465 # ens6d1 on dsa5
 
         dest_port = 4011
-        dest_port1 = 4011
+        dest_port1 = 4012
 
         src_mac = mac_base0+src_ip_base
         src_mac1 = mac_base0+src_ip_base1
@@ -101,7 +101,7 @@ def config10g(SNAP):
         dest_mac1 = 40175247654465 # ens6d1 on dsa5
 
         dest_port = 4011
-        dest_port1 = 4011
+        dest_port1 = 4013
         
         src_mac = mac_base0+src_ip_base
         src_mac1 = mac_base0+src_ip_base1
@@ -126,7 +126,7 @@ def config10g(SNAP):
         dest_mac1 = 40175247654465 # ens6d1 on dsa5
 
         dest_port = 4011
-        dest_port1 = 4011
+        dest_port1 = 4014
         
         src_mac = mac_base0+src_ip_base
         src_mac1 = mac_base0+src_ip_base1
@@ -152,7 +152,7 @@ def config10g(SNAP):
         dest_mac1 = 40175247654465 # ens6d1 on dsa5
 
         dest_port = 4011
-        dest_port1 = 4011
+        dest_port1 = 4015
         
         src_mac = mac_base0+src_ip_base
         src_mac1 = mac_base0+src_ip_base1
@@ -790,10 +790,7 @@ for i in np.arange(2,len(sys.argv)):
         cscale=1
     if sys.argv[i]=='-check_spectra':
         cs=1
-        ncs = int(sys.argv[i+1])
-    if sys.argv[i]=='-monitor_spectra':
-        ms=1
-        ncs = int(sys.argv[i+1])
+        ncs = SNAP
     if sys.argv[i]=='-prog':
         prog=1
     if sys.argv[i]=='-adc':
@@ -904,17 +901,10 @@ if scale:
 
 
 if cs==1:
-    print 'Checking spectra from SNAPs',ncs
-    #while 1==1:
+    print 'Checking spectra from SNAP',ncs
     os.system('ssh user@dsa5 /mnt/nfs/code/check_spectra '+str(ncs))
-    os.system('/mnt/nfs/code/plot_spectra '+str(ncs))
+    os.system('/mnt/nfs/code/plot_spectra 1')
 
-if ms==1:
-    print 'Checking spectra from SNAPs',ncs
-    while 1==1:
-        os.system('ssh user@dsa5 /mnt/nfs/code/monitor_spectra '+str(ncs))
-        os.system('/mnt/nfs/code/plot_spectra '+str(ncs))
-        time.sleep(0.1)
 
     
 if rawlevs==1:
