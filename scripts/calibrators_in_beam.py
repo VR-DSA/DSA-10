@@ -38,7 +38,7 @@ def get_alt_az_at_meridian(ra,dec, site,year,month,day):
     azimuth_at_meridian = altaz_FRB.az[meridian_index[0]]
     return altitude_at_meridian.degree, azimuth_at_meridian.degree
 
-def get_altaz_of_calibrators(calibrators_file,site):
+def get_altaz_of_calibrators(calibrators_file,site,time):
     """Inputs:
     calibrators_file: a list of accepatble calibrator sources from NVSS for a particular source
     site is an EarthLocation object of where your observatory is
@@ -49,8 +49,7 @@ def get_altaz_of_calibrators(calibrators_file,site):
     calibrators.iloc[:,2] +=' hours'
     calibrators.iloc[:,3] +=' degrees'
     srcs = SkyCoord(calibrators.iloc[:,2],calibrators.iloc[:,3], frame='icrs')
-    time_now = dt.datetime.now()
-    altaz_srcs = srcs.transform_to(AltAz(obstime=time_now,location=site))
+    altaz_srcs = srcs.transform_to(AltAz(obstime=time,location=site))
     return altaz_srcs
 
 def get_calibrators_in_beam(sources,pointing_az,pointing_alt,time,site,tolerance):
@@ -64,7 +63,7 @@ def get_calibrators_in_beam(sources,pointing_az,pointing_alt,time,site,tolerance
     Outputs:
     good_calibrators: An array of SkyCoord objects of calibrators that are in-beam"""
 
-    pointing = AltAz(obstime=time_now,az = pointing_az*u.degree,alt=pointing_alt*u.degree,location=site)
+    pointing = AltAz(obstime=time,az = pointing_az*u.degree,alt=pointing_alt*u.degree,location=site)
     calibrator_separations = pointing.separation(sources)
     calibrators_in_beam = np.where(calibrator_separations.degree < tolerance)[0]
     good_calibrators = sources[calibrators_in_beam]
@@ -86,8 +85,8 @@ def can_we_calibrate(ra, dec, latitude, longitude, elevation, pointing_year, poi
     """
     site = EarthLocation(lat = latitude, lon = longitude, height = elevation)
     meridian_alt, meridian_az = get_alt_az_at_meridian(ra = ra,dec = dec, site = site,year = pointing_year,month = pointing_month,day = pointing_day)
-    calibrators_altaz = get_altaz_of_calibrators(calibrators_file = calibrators_file, site = site)
-    good_calibrators = get_calibrators_in_beam(sources=calibrators_altaz,pointing_az=meridian_az,pointing_alt=meridian_alt,time=time,site=site, tolerance=tolerance)
+    calibrators_altaz = get_altaz_of_calibrators(calibrators_file = calibrators_file, site = site, time = time)
+    good_calibrators = get_calibrators_in_beam(sources=calibrators_altaz,pointing_az=meridian_az.,pointing_alt=meridian_alt,time=time,site=site, tolerance=tolerance)
     return good_calibrators
 
 
@@ -97,46 +96,20 @@ def can_we_calibrate(ra, dec, latitude, longitude, elevation, pointing_year, poi
 if __name__ == '__main__':
     ra = '04h22m22s'
     dec = '+73d40m00s'
-    latitude = 27.233247 * u.deg
+    latitude = 37.233247 * u.deg
     longitude = -118.283396 * u.deg
     elevation = 1222 * u.m
+    ovro = EarthLocation(lat = latitude, lon = longitude, height = elevation)
     pointing_year = 2019
-    pointing_month = 4
-    pointing_day = 1
-    calibrators_file = "C:/Users/boche/Documents/Work/DSA/calibrators/frb_calibrators.txt"
-    time_now = dt.datetime.now()
-    tolerance = 3.5/np.cos(Angle(dec))
-    good_calibrators = can_we_calibrate(ra,dec,latitude,longitude,elevation,pointing_year,pointing_month,pointing_day,calibrators_file,time_now,tolerance)
+    pointing_month = 3
+    pointing_day = 19
+    pointing_az = 0.
+    pointing_el = 53.6
+    calibrators_file = "frb_calibrators.txt"
+    time_now = dt.datetime.utcnow()
+    tolerance = 3.5
+    calibrators_altaz = get_altaz_of_calibrators(calibrators_file,ovro,time_now)
+    good_calibrators = get_calibrators_in_beam(calibrators_altaz,pointing_az,pointing_el,time_now,ovro,tolerance)
+    #good_calibrators = can_we_calibrate(ra,dec,latitude,longitude,elevation,pointing_year,pointing_month,pointing_day,calibrators_file,time_now,tolerance)
     if len(good_calibrators) > 0:
         print "Time to calibrate!"
-
-
-# In[103]:
-
-
-
-
-
-# In[97]:
-
-
-
-
-
-# In[90]:
-
-
-
-
-
-# In[65]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
