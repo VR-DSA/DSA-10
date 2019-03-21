@@ -1,4 +1,4 @@
-/* VR 2018, based on code by J. Kocz, A. Jameson (leda_udpdb_thread.c) */
+/* VR 2017, based on code by J. Kocz, A. Jameson (leda_udpdb_thread.c) */
 /* Captures UDP data to dada ring buffer, with well-managed flush */
 
 #include <time.h>
