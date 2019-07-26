@@ -50,13 +50,13 @@ dsaX_recv_bsp: dsaX_recv_bsp.c
 	gcc -o $@ $^ -I/usr/local/psrdada/src -I/usr/local/include -L/usr/local/lib -lpsrdada -lm -pthread -g -O2 -L/usr/lib/gcc/x86_64-linux-gnu/5 -lgfortran
 
 install:
-	mv dsaX_dbnic dsaX_nicdb dsaX_correlator_fanout dsaX_single dsaX_fancy dsaX_writevis dsaX_correlator_copy dsaX_store dsaX_trigger dsaX_correlator_udpdb_thread $(BINDIR)
-	cp cpscr.bash $(BINDIR)
+	cp dsaX_dbnic dsaX_nicdb dsaX_correlator_fanout dsaX_single dsaX_fancy dsaX_writevis dsaX_correlator_copy dsaX_store dsaX_trigger dsaX_correlator_udpdb_thread cpscr.bash $(BINDIR)
+
 
 .PHONY: clean
 
 clean:
-	rm -f *.o *.~ dsaX_dbnic dsaX_nicdb dsaX_correlator_fanout dsaX_final dsaX_massager dsaX_xgpu dsaX_single dsaX_fancy
+	rm -f *.o *.~ dsaX_dbnic dsaX_nicdb dsaX_correlator_fanout dsaX_final dsaX_massager dsaX_xgpu dsaX_single dsaX_writevis dsaX_fancy dsaX_correlator_udpdb_thread dsaX_correlator_copy dsaX_store dsaX_trigger
 
 
 

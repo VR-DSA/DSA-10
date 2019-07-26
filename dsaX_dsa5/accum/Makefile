@@ -16,7 +16,7 @@ dsaX_spectrometer_udpdb_thread: $(SOBJ)
 	gcc -o $@ $^ $(CFLAGS) $(LIBS)
 
 dsaX_filflag: dsaX_filflag.cu
-	/usr/local/cuda-8.0/bin/nvcc -o $@ $^ -ccbin=g++ -I/usr/local/sigproc -I/usr/local/thrust/thrust -I/usr/local/psrdada/src -I/usr/local/include -L/usr/local/lib -lcfitsio -lpsrdada -lsigproc  -O3
+	/usr/local/cuda-10.1/bin/nvcc -o $@ $^ -ccbin=g++ -I/usr/local/sigproc -I/usr/local/thrust/thrust -I/usr/local/psrdada/src -I/usr/local/include -L/usr/local/lib -lcfitsio -lpsrdada -lsigproc  -O3
 
 dsaX_dbmerge: dsaX_dbmerge.c
 	g++ -o $@ $^ -I/usr/local/psrdada/src -I/usr/local/include -L/usr/local/lib -lpsrdada -lm -pthread -g -O2 -L/usr/lib/gcc/x86_64-linux-gnu/5 -lgfortran
@@ -24,7 +24,7 @@ dsaX_dbmerge: dsaX_dbmerge.c
 .PHONY: clean
 
 clean:
-	rm -f *.o *.*~
+	rm -f *.o *.*~ dsaX_spectrometer_udpdb_thread dsaX_filflag dsaX_dbmerge
 
 install:
 	cp dsaX_spectrometer_udpdb_thread dsaX_filflag dsaX_dbmerge  $(BINDIR)

@@ -61,7 +61,7 @@ if cbuffers:
     os.system('ssh user@'+machine+' "source ~/.bashrc; dada_db -k dada -b 402653184 -l -p -c 0 -n 8"')
     os.system('ssh user@'+machine+' "source ~/.bashrc; dada_db -k caca -b 402653184 -l -p -c 0 -n 3"')
     os.system('ssh user@'+machine+' "source ~/.bashrc; dada_db -k fafa -b 2415919104 -l -p -c 0 -n 2"')
-    os.system('ssh user@'+machine+' "source ~/.bashrc; dada_db -k eaea -b 2415919104 -l -p -c 1 -n 25"')
+    os.system('ssh user@'+machine+' "source ~/.bashrc; dada_db -k eaea -b 2415919104 -l -p -c 1 -n 5"')
     os.system('ssh user@'+machine+' "source ~/.bashrc; dada_db -k dbda -b 49152000 -l -p -c 0 -n 4"')
     os.system('ssh user@'+machine+' "source ~/.bashrc; dada_db -k dcda -b 49152000 -l -p -c 0 -n 4"')
     os.system('ssh user@'+machine+' "source ~/.bashrc; dada_db -k ddda -b 49152000 -l -p -c 0 -n 4"')
@@ -96,8 +96,8 @@ if machine=='dsamaster':
     nicdb3 = '/usr/local/dsaX/bin/dsaX_nicdb -k addd -p 7014 -c 10 -b '+nbytes_many+' -i 10.10.4.1'
     nicdb4 = '/usr/local/dsaX/bin/dsaX_nicdb -k aaaa -p 7013 -c 11 -b '+nbytes_many+' -i 10.10.4.1'
     nicdb5 = '/usr/local/dsaX/bin/dsaX_nicdb -k aaba -p 7012 -c 12 -b '+nbytes_many+' -i 10.10.4.1'
-    final = '/usr/local/dsaX/bin/dsaX_writevis -c 13 -f /home/user/data/run1/dsa0 -o 1487.27539'
-    trigger = '/usr/local/dsaX/bin/dsaX_trigger -i 10.10.1.1 -n dsa0'
+    final = '/usr/local/dsaX/bin/dsaX_writevis -c 13 -f /home/user/data/run1/dsa0 -o 1487.27539 -i 10.10.1.1'
+    #trigger = '/usr/local/dsaX/bin/dsaX_trigger -i 10.10.1.1 -n dsa0'
     
 if machine=='dsa1':
     capture = '/usr/local/dsaX/bin/dsaX_correlator_udpdb_thread -b 1 -f /mnt/nfs/code/dsaX/src/correlator_header_dsaX.txt -k dada -i 10.10.6.1 -p 4011'
@@ -112,8 +112,8 @@ if machine=='dsa1':
     nicdb3 = '/usr/local/dsaX/bin/dsaX_nicdb -k addd -p 7014 -c 10 -b '+nbytes_many+' -i 10.10.4.2'
     nicdb4 = '/usr/local/dsaX/bin/dsaX_nicdb -k aaaa -p 7013 -c 11 -b '+nbytes_many+' -i 10.10.4.2'
     nicdb5 = '/usr/local/dsaX/bin/dsaX_nicdb -k aaba -p 7012 -c 12 -b '+nbytes_many+' -i 10.10.4.2'
-    final = '/usr/local/dsaX/bin/dsaX_writevis -c 13 -f /home/user/data/run1/dsa1 -o 1456.75781'
-    trigger = '/usr/local/dsaX/bin/dsaX_trigger -i 10.10.1.7 -n dsa1'
+    final = '/usr/local/dsaX/bin/dsaX_writevis -c 13 -f /home/user/data/run1/dsa1 -o 1456.75781  -i 10.10.1.7'
+    #trigger = '/usr/local/dsaX/bin/dsaX_trigger -i 10.10.1.7 -n dsa1'
     
 if machine=='dsa2':
     capture = '/usr/local/dsaX/bin/dsaX_correlator_udpdb_thread -b 1 -f /mnt/nfs/code/dsaX/src/correlator_header_dsaX.txt -k dada -i 10.10.7.1 -p 4011'
@@ -128,8 +128,8 @@ if machine=='dsa2':
     nicdb3 = '/usr/local/dsaX/bin/dsaX_nicdb -k addd -p 7014 -c 10 -b '+nbytes_many+' -i 10.10.4.3'
     nicdb4 = '/usr/local/dsaX/bin/dsaX_nicdb -k aaaa -p 7013 -c 11 -b '+nbytes_many+' -i 10.10.4.3'
     nicdb5 = '/usr/local/dsaX/bin/dsaX_nicdb -k aaba -p 7012 -c 12 -b '+nbytes_many+' -i 10.10.4.3'
-    final = '/usr/local/dsaX/bin/dsaX_writevis -c 13 -f /home/user/data/run1/dsa2 -o 1426.24023'
-    trigger = '/usr/local/dsaX/bin/dsaX_trigger -i 10.10.1.8 -n dsa2'
+    final = '/usr/local/dsaX/bin/dsaX_writevis -c 13 -f /home/user/data/run1/dsa2 -o 1426.24023  -i 10.10.1.8'
+    #trigger = '/usr/local/dsaX/bin/dsaX_trigger -i 10.10.1.8 -n dsa2'
     
 if machine=='dsa3':
     capture = '/usr/local/dsaX/bin/dsaX_correlator_udpdb_thread -b 1 -f /mnt/nfs/code/dsaX/src/correlator_header_dsaX.txt -k dada -i 10.10.8.1 -p 4011'
@@ -144,8 +144,8 @@ if machine=='dsa3':
     nicdb3 = '/usr/local/dsaX/bin/dsaX_nicdb -k addd -p 7014 -c 10 -b '+nbytes_many+' -i 10.10.4.4'
     nicdb4 = '/usr/local/dsaX/bin/dsaX_nicdb -k aaaa -p 7013 -c 11 -b '+nbytes_many+' -i 10.10.4.4'
     nicdb5 = '/usr/local/dsaX/bin/dsaX_nicdb -k aaba -p 7012 -c 12 -b '+nbytes_many+' -i 10.10.4.4'
-    final = '/usr/local/dsaX/bin/dsaX_writevis -c 13 -f /home/user/data/run1/dsa3 -o 1395.72266'
-    trigger = '/usr/local/dsaX/bin/dsaX_trigger -i 10.10.1.9 -n dsa3'
+    final = '/usr/local/dsaX/bin/dsaX_writevis -c 13 -f /home/user/data/run1/dsa3 -o 1395.72266  -i 10.10.1.9'
+    #trigger = '/usr/local/dsaX/bin/dsaX_trigger -i 10.10.1.9 -n dsa3'
     
 if machine=='dsa4':
     capture = '/usr/local/dsaX/bin/dsaX_correlator_udpdb_thread -b 1 -f /mnt/nfs/code/dsaX/src/correlator_header_dsaX.txt -k dada -i 10.10.9.1 -p 4011'
@@ -160,13 +160,14 @@ if machine=='dsa4':
     nicdb3 = '/usr/local/dsaX/bin/dsaX_nicdb -k addd -p 7014 -c 10 -b '+nbytes_many+' -i 10.10.4.5'
     nicdb4 = '/usr/local/dsaX/bin/dsaX_nicdb -k aaaa -p 7013 -c 11 -b '+nbytes_many+' -i 10.10.4.5'
     nicdb5 = '/usr/local/dsaX/bin/dsaX_nicdb -k aaba -p 7012 -c 12 -b '+nbytes_many+' -i 10.10.4.5'
-    final = '/usr/local/dsaX/bin/dsaX_writevis -c 13 -f /home/user/data/run1/dsa4 -o 1365.20508'
-    trigger = '/usr/local/dsaX/bin/dsaX_trigger -i 10.10.1.10 -n dsa4'
+    final = '/usr/local/dsaX/bin/dsaX_writevis -c 13 -f /home/user/data/run1/dsa4 -o 1365.20508  -i 10.10.1.10'
+    #trigger = '/usr/local/dsaX/bin/dsaX_trigger -i 10.10.1.10 -n dsa4'
 
 ccopy = '/usr/local/dsaX/bin/dsaX_correlator_copy -c 21'
 store = '/usr/local/dsaX/bin/dsaX_store'
 fanout = '/usr/local/dsaX/bin/dsaX_correlator_fanout -c 2 -n '+nsamps
 massager = '/usr/local/dsaX/bin/dsaX_fancy -c 14 -n '+nbytes_final
+trigger = 'dada_dbnull -k eaea'
 
 ar1 = '/usr/local/dsaX/bin/dsaX_single -k adbd -o bdad -c 24'
 ar2 = '/usr/local/dsaX/bin/dsaX_single -k adcd -o bdcd -c 25'
@@ -287,6 +288,9 @@ if stop:
     output0 = subprocess.Popen('ssh user@'+machine+' "source ~/.bashrc; killall -q dsaX_trigger"',shell=True)
     subprocess.Popen.wait(output0)
 
+    output0 = subprocess.Popen('ssh user@'+machine+' "source ~/.bashrc; killall -q dada_dbnull"',shell=True)
+    subprocess.Popen.wait(output0)
+    
     output0 = subprocess.Popen('ssh user@'+machine+' "source ~/.bashrc; killall -q dsaX_correlator_copy"',shell=True)
     subprocess.Popen.wait(output0)
 
@@ -305,7 +309,7 @@ if stop:
     output0 = subprocess.Popen('ssh user@'+machine+' "source ~/.bashrc; killall -q dsaX_fancy"',shell=True)
     subprocess.Popen.wait(output0) 
 
-    output0 = subprocess.Popen('ssh user@'+machine+' "source ~/.bashrc; killall -q dsaX_bispectrum"',shell=True)
+    output0 = subprocess.Popen('ssh user@'+machine+' "source ~/.bashrc; killall -q dsaX_writevis"',shell=True)
     subprocess.Popen.wait(output0)
 
     output0 = subprocess.Popen('ssh user@'+machine+' "source ~/.bashrc; killall -q cpscr.bash"',shell=True)

@@ -115,7 +115,7 @@ void control_thread (void * arg) {
     // interpret buffer string
     char * rest = buffer;
     tmp_reclen = (float)(strtof(strtok(rest, "-"),&endptr));
-    char *tmp_srcnam = strtok(rest, "-");
+    char * tmp_srcnam = strtok(NULL, "-");
     
     if (!dump_pending) {
       reclen = tmp_reclen;
@@ -263,7 +263,7 @@ int main (int argc, char *argv[]) {
   FILE *ftime;
   int fctr = 0, integration = 0;
   char tstamp[100];
-  double mjd;
+  double mjd=0.;
   fitsfile *fptr;
   int rownum = 1;
   int fwrite = 0;
@@ -287,6 +287,8 @@ int main (int argc, char *argv[]) {
     block = ipcio_open_block_read (hdu_in->data_block, &bytes_read, &block_id);
     data = (float *)block; // order is [384 time, 55 baseline, 125 freq, 2 pol, 2 ri]
 
+    printf("read block\n");
+    
     // sum input visibilities
     for (int i=0;i<npts;i++) summed_vis[i] = 0.;
     for (int i=0;i<nsamps_gulp;i++) {
@@ -294,11 +296,17 @@ int main (int argc, char *argv[]) {
 	summed_vis[j] += data[i*npts+j];
     }
 
+    printf("summed vis\n");
+    
     // get start time, and convert others to samples
-    ftime=fopen("/mnt/nfs/runtime/UTC_START.txt","r");
-    fscanf(ftime,"%lf\n",&mjd);
-    fscanf(ftime,"%[^\n]",&tstamp[0]);
-    fclose(ftime);
+    if (mjd==0.) {
+      ftime=fopen("/mnt/nfs/runtime/UTC_START.txt","r");
+      fscanf(ftime,"%lf\n",&mjd);
+      fscanf(ftime,"%[^\n]",&tstamp[0]);
+      fclose(ftime);
+    }
+
+    printf("got mjd %g\n",mjd);
     
     // check for dump_pending
     if (dump_pending) {
@@ -337,10 +345,13 @@ int main (int argc, char *argv[]) {
 	
       }
 
+      printf("ready to write\n");
+      
       // write data to file
       fits_open_table(&fptr, foutnam, READWRITE, &status);
-      fits_write_col(fptr, TFLOAT, 1, rownum, 1, 66000, summed_vis, &status);
-      
+      printf("opened file\n");
+      fits_write_col(fptr, TFLOAT, 1, rownum, 1, 27500, summed_vis, &status);
+      printf("written col\n");
       rownum += 1;
       fits_update_key(fptr, TINT, "NAXIS2", &rownum, "", &status);
       fits_close_file(fptr, &status);
@@ -354,7 +365,9 @@ int main (int argc, char *argv[]) {
 	fwrite=0;
 	dump_pending=0;
       }
-	
+
+      printf("written\n");
+      
     }
 
     // update mjd

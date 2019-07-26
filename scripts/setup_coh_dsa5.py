@@ -1,8 +1,6 @@
 import sys, subprocess, os
 from time import sleep
 
-dada_nbytes = '960000'
-eada_nbytes = '7680000'
 
 machine='dsa5'
 
@@ -24,92 +22,122 @@ if (sys.argv[1]=='stop'):
 if dbuffers:
     
     print 'destroying dada buffers on ',machine
+    os.system('ssh user@'+machine+' "source ~/.bashrc; dada_db -k abda -d"')
+    os.system('ssh user@'+machine+' "source ~/.bashrc; dada_db -k bbda -d"')
+    os.system('ssh user@'+machine+' "source ~/.bashrc; dada_db -k cbda -d"')
+    os.system('ssh user@'+machine+' "source ~/.bashrc; dada_db -k dbda -d"')
+    os.system('ssh user@'+machine+' "source ~/.bashrc; dada_db -k ebda -d"')
+    os.system('ssh user@'+machine+' "source ~/.bashrc; dada_db -k adba -d"')
+    os.system('ssh user@'+machine+' "source ~/.bashrc; dada_db -k adbb -d"')
+    os.system('ssh user@'+machine+' "source ~/.bashrc; dada_db -k adbc -d"')
     os.system('ssh user@'+machine+' "source ~/.bashrc; dada_db -k adbd -d"')
-    os.system('ssh user@'+machine+' "source ~/.bashrc; dada_db -k adcd -d"')
-    os.system('ssh user@'+machine+' "source ~/.bashrc; dada_db -k addd -d"')
-    os.system('ssh user@'+machine+' "source ~/.bashrc; dada_db -k aaaa -d"')
-    os.system('ssh user@'+machine+' "source ~/.bashrc; dada_db -k aaba -d"')
+    os.system('ssh user@'+machine+' "source ~/.bashrc; dada_db -k adbe -d"')
+    os.system('ssh user@'+machine+' "source ~/.bashrc; dada_db -k dada -d"')
     os.system('ssh user@'+machine+' "source ~/.bashrc; dada_db -k eada -d"')
-    os.system('ssh user@'+machine+' "source ~/.bashrc; dada_db -k fada -d"')
     
 
 if cbuffers:
     print 'creating dada buffers on ',machine
-    os.system('ssh user@'+machine+' "source ~/.bashrc; dada_db -k adbd -b 192000 -l -p -c 0 -n 10"')
-    os.system('ssh user@'+machine+' "source ~/.bashrc; dada_db -k adcd -b 192000 -l -p -c 0 -n 10"')
-    os.system('ssh user@'+machine+' "source ~/.bashrc; dada_db -k addd -b 192000 -l -p -c 0 -n 10"')
-    os.system('ssh user@'+machine+' "source ~/.bashrc; dada_db -k aaaa -b 192000 -l -p -c 0 -n 10"')
-    os.system('ssh user@'+machine+' "source ~/.bashrc; dada_db -k aaba -b 192000 -l -p -c 0 -n 10"')
-    os.system('ssh user@'+machine+' "source ~/.bashrc; dada_db -k eada -b 7680000 -l -p -c 0 -n 2"')
-    os.system('ssh user@'+machine+' "source ~/.bashrc; dada_db -k fada -b 7680000 -l -p -c 0 -n 2"')
+    os.system('ssh user@'+machine+' "source ~/.bashrc; dada_db -k abda -b 256000000 -l -p -c 0 -n 4"')
+    os.system('ssh user@'+machine+' "source ~/.bashrc; dada_db -k bbda -b 256000000 -l -p -c 0 -n 4"')
+    os.system('ssh user@'+machine+' "source ~/.bashrc; dada_db -k cbda -b 256000000 -l -p -c 0 -n 4"')
+    os.system('ssh user@'+machine+' "source ~/.bashrc; dada_db -k dbda -b 256000000 -l -p -c 0 -n 4"')
+    os.system('ssh user@'+machine+' "source ~/.bashrc; dada_db -k ebda -b 256000000 -l -p -c 0 -n 4"')
+    os.system('ssh user@'+machine+' "source ~/.bashrc; dada_db -k adba -b 256000000 -l -p -c 0 -n 4"')
+    os.system('ssh user@'+machine+' "source ~/.bashrc; dada_db -k adbb -b 256000000 -l -p -c 0 -n 4"')
+    os.system('ssh user@'+machine+' "source ~/.bashrc; dada_db -k adbc -b 256000000 -l -p -c 0 -n 4"')
+    os.system('ssh user@'+machine+' "source ~/.bashrc; dada_db -k adbd -b 256000000 -l -p -c 0 -n 4"')
+    os.system('ssh user@'+machine+' "source ~/.bashrc; dada_db -k adbe -b 256000000 -l -p -c 0 -n 4"')
+    os.system('ssh user@'+machine+' "source ~/.bashrc; dada_db -k dada -b 256000000 -l -p -c 0 -n 32"')
+    os.system('ssh user@'+machine+' "source ~/.bashrc; dada_db -k eada -b 256000000 -l -p -c 0 -n 4"')
+    
    
 
-
+ 
 # processes
 
+capture1 = '/usr/local/dsaX/bin/dsaX_spectrometer_udpdb_thread -b 16 -f /mnt/nfs/code/dsaX_future/DSA-10/dsaX_dsa5/accum/spectrometer_header.txt -k abda -i 10.10.3.1 -p 4011'
+capture2 = '/usr/local/dsaX/bin/dsaX_spectrometer_udpdb_thread -b 17 -f /mnt/nfs/code/dsaX_future/DSA-10/dsaX_dsa5/accum/spectrometer_header.txt -k bbda -i 10.10.3.1 -p 4012'
+capture3 = '/usr/local/dsaX/bin/dsaX_spectrometer_udpdb_thread -b 18 -f /mnt/nfs/code/dsaX_future/DSA-10/dsaX_dsa5/accum/spectrometer_header.txt -k cbda -i 10.10.3.1 -p 4013'
+capture4 = '/usr/local/dsaX/bin/dsaX_spectrometer_udpdb_thread -b 19 -f /mnt/nfs/code/dsaX_future/DSA-10/dsaX_dsa5/accum/spectrometer_header.txt -k dbda -i 10.10.3.1 -p 4014'
+capture5 = '/usr/local/dsaX/bin/dsaX_spectrometer_udpdb_thread -b 20 -f /mnt/nfs/code/dsaX_future/DSA-10/dsaX_dsa5/accum/spectrometer_header.txt -k ebda -i 10.10.3.1 -p 4015'
+filflag1 = '/usr/local/dsaX/bin/dsaX_filflag -c 2 -f 1 -n slog1 -k abda -l adba'
+filflag2 = '/usr/local/dsaX/bin/dsaX_filflag -c 3 -f 1 -n slog2 -k bbda -l adbb'
+filflag3 = '/usr/local/dsaX/bin/dsaX_filflag -c 4 -f 1 -n slog3 -k cbda -l adbc'
+filflag4 = '/usr/local/dsaX/bin/dsaX_filflag -c 5 -f 1 -n slog4 -k dbda -l adbd'
+filflag5 = '/usr/local/dsaX/bin/dsaX_filflag -c 6 -f 1 -n slog5 -k ebda -l adbe'
+dbmerge = '/usr/local/dsaX/bin/dsaX/dbmerge -c 7 -db0 adba -db1 adbb -db2 adbc -db3 adbd -db4 adbe -o dada'
+final = '/usr/local/dsaX/bin/dsaX_filflag -c 1 -f 0 -n blog -k dada -l eada'
+dbnull = 'dada_dbnull -k eada'
 
-ndb1 = '/mnt/nfs/code/dsaX/cohsrc/dsaX_nicdb_tcp -c 1 -b 192000 -i 10.10.4.6 -p 4011 -k adbd'
-ndb2 = '/mnt/nfs/code/dsaX/cohsrc/dsaX_nicdb_tcp -c 2 -b 192000 -i 10.10.4.6 -p 4012 -k adcd'
-ndb3 = '/mnt/nfs/code/dsaX/cohsrc/dsaX_nicdb_tcp -c 4 -b 192000 -i 10.10.4.6 -p 4013 -k addd'
-ndb4 = '/mnt/nfs/code/dsaX/cohsrc/dsaX_nicdb_tcp -c 6 -b 192000 -i 10.10.4.6 -p 4014 -k aaaa'
-ndb5 = '/mnt/nfs/code/dsaX/cohsrc/dsaX_nicdb_tcp -c 7 -b 192000 -i 10.10.4.6 -p 4015 -k aaba'
-ftus = '/mnt/nfs/code/dsaX/cohsrc/dsaX_ftus -c 3 -f /mnt/nfs/code/dsaX/cohsrc/spectrometer_header.txt'
-flagg = '/mnt/nfs/code/dsaX/cohsrc/dsaX_flag -c 20'
-heimdall = '/usr/local/heimdallr/bin/heimdall -k fada -v -nsamps_gulp 6144 -output_dir /mnt/nfs/data/heimdall -dm 0 3000'
-cpheim = '/mnt/nfs/code/dsaX/cohsrc/cpheimdall.bash'
 
 # start things up
 
 if start:
 
-    print 'Starting cpheim'
-    cpheim_log = open('/mnt/nfs/runtime/tmplog/cpheim_log_'+machine+'.log','w')
-    cpheim_proc = subprocess.Popen('ssh user@'+machine+' "source ~/.bashrc; '+cpheim+'"', shell = True, stdout=cpheim_log, stderr=cpheim_log)
+    print 'Starting dbnull'
+    cpheim_log = open('/mnt/nfs/runtime/tmplog/dbnull_log_'+machine+'.log','w')
+    cpheim_proc = subprocess.Popen('ssh user@'+machine+' "source ~/.bashrc; '+dbnull+'"', shell = True, stdout=dbnull_log, stderr=dbnull_log)
     sleep(0.1)
     
-    print 'Starting heimdall'
-    heimdall_log = open('/mnt/nfs/runtime/tmplog/heimdall_log_'+machine+'.log','w')
-    heimdall_proc = subprocess.Popen('ssh user@'+machine+' "source ~/.bashrc; '+heimdall+'"', shell = True, stdout=heimdall_log, stderr=heimdall_log)
+    print 'Starting final'
+    final_log = open('/mnt/nfs/runtime/tmplog/final_log_'+machine+'.log','w')
+    final_proc = subprocess.Popen('ssh user@'+machine+' "source ~/.bashrc; '+final+'"', shell = True, stdout=final_log, stderr=final_log)
     sleep(0.1)
 
-    print 'Starting flag'
-    flag_log = open('/mnt/nfs/runtime/tmplog/flag_log_'+machine+'.log','w')
-    flag_proc = subprocess.Popen('ssh user@'+machine+' "source ~/.bashrc; '+flagg+'"', shell = True, stdout=flag_log, stderr=flag_log)
-    sleep(0.1)
-    
-    print 'Starting ftus'
-    ftus_log = open('/mnt/nfs/runtime/tmplog/ftus_log_'+machine+'.log','w')
-    ftus_proc = subprocess.Popen('ssh user@'+machine+' "source ~/.bashrc; '+ftus+'"', shell = True, stdout=ftus_log, stderr=ftus_log)
+    print 'Starting dbmerge'
+    dbmerge_log = open('/mnt/nfs/runtime/tmplog/dbmerge_log_'+machine+'.log','w')
+    dbmerge_proc = subprocess.Popen('ssh user@'+machine+' "source ~/.bashrc; '+dbmerge+'"', shell = True, stdout=dbmerge_log, stderr=dbmerge_log)
     sleep(0.1)
 
-    print 'Starting captures'
-    ndb1_log = open('/mnt/nfs/runtime/tmplog/ndb1_log_'+machine+'.log','w')
-    ndb1_proc = subprocess.Popen('ssh user@'+machine+' "source ~/.bashrc; '+ndb1+'"', shell = True, stdout=ndb1_log, stderr=ndb1_log)
-    ndb2_log = open('/mnt/nfs/runtime/tmplog/ndb2_log_'+machine+'.log','w')
-    ndb2_proc = subprocess.Popen('ssh user@'+machine+' "source ~/.bashrc; '+ndb2+'"', shell = True, stdout=ndb2_log, stderr=ndb2_log)
-    ndb3_log = open('/mnt/nfs/runtime/tmplog/ndb3_log_'+machine+'.log','w')
-    ndb3_proc = subprocess.Popen('ssh user@'+machine+' "source ~/.bashrc; '+ndb3+'"', shell = True, stdout=ndb3_log, stderr=ndb3_log)
-    ndb4_log = open('/mnt/nfs/runtime/tmplog/ndb4_log_'+machine+'.log','w')
-    ndb4_proc = subprocess.Popen('ssh user@'+machine+' "source ~/.bashrc; '+ndb4+'"', shell = True, stdout=ndb4_log, stderr=ndb4_log)
-    ndb5_log = open('/mnt/nfs/runtime/tmplog/ndb5_log_'+machine+'.log','w')
-    ndb5_proc = subprocess.Popen('ssh user@'+machine+' "source ~/.bashrc; '+ndb5+'"', shell = True, stdout=ndb5_log, stderr=ndb5_log)
+    print 'Starting 5 filflags'
+    filflag1_log = open('/mnt/nfs/runtime/tmplog/filflag1_log_'+machine+'.log','w')
+    filflag1_proc = subprocess.Popen('ssh user@'+machine+' "source ~/.bashrc; '+filflag1+'"', shell = True, stdout=filflag1_log, stderr=filflag1_log)
+    sleep(0.1)
+    filflag2_log = open('/mnt/nfs/runtime/tmplog/filflag2_log_'+machine+'.log','w')
+    filflag2_proc = subprocess.Popen('ssh user@'+machine+' "source ~/.bashrc; '+filflag2+'"', shell = True, stdout=filflag2_log, stderr=filflag2_log)
+    sleep(0.1)
+    filflag3_log = open('/mnt/nfs/runtime/tmplog/filflag3_log_'+machine+'.log','w')
+    filflag3_proc = subprocess.Popen('ssh user@'+machine+' "source ~/.bashrc; '+filflag3+'"', shell = True, stdout=filflag3_log, stderr=filflag3_log)
+    sleep(0.1)
+    filflag4_log = open('/mnt/nfs/runtime/tmplog/filflag4_log_'+machine+'.log','w')
+    filflag4_proc = subprocess.Popen('ssh user@'+machine+' "source ~/.bashrc; '+filflag4+'"', shell = True, stdout=filflag4_log, stderr=filflag4_log)
+    sleep(0.1)
+    filflag5_log = open('/mnt/nfs/runtime/tmplog/filflag5_log_'+machine+'.log','w')
+    filflag5_proc = subprocess.Popen('ssh user@'+machine+' "source ~/.bashrc; '+filflag5+'"', shell = True, stdout=filflag5_log, stderr=filflag5_log)
+    sleep(0.1)
+
+    print 'Starting 5 captures'
+    capture1_log = open('/mnt/nfs/runtime/tmplog/capture1_log_'+machine+'.log','w')
+    capture1_proc = subprocess.Popen('ssh user@'+machine+' "source ~/.bashrc; '+capture1+'"', shell = True, stdout=capture1_log, stderr=capture1_log)
+    sleep(0.1)
+    capture2_log = open('/mnt/nfs/runtime/tmplog/capture2_log_'+machine+'.log','w')
+    capture2_proc = subprocess.Popen('ssh user@'+machine+' "source ~/.bashrc; '+capture2+'"', shell = True, stdout=capture2_log, stderr=capture2_log)
+    sleep(0.1)
+    capture3_log = open('/mnt/nfs/runtime/tmplog/capture3_log_'+machine+'.log','w')
+    capture3_proc = subprocess.Popen('ssh user@'+machine+' "source ~/.bashrc; '+capture3+'"', shell = True, stdout=capture3_log, stderr=capture3_log)
+    sleep(0.1)
+    capture4_log = open('/mnt/nfs/runtime/tmplog/capture4_log_'+machine+'.log','w')
+    capture4_proc = subprocess.Popen('ssh user@'+machine+' "source ~/.bashrc; '+capture4+'"', shell = True, stdout=capture4_log, stderr=capture4_log)
+    sleep(0.1)
+    capture5_log = open('/mnt/nfs/runtime/tmplog/capture5_log_'+machine+'.log','w')
+    capture5_proc = subprocess.Popen('ssh user@'+machine+' "source ~/.bashrc; '+capture5+'"', shell = True, stdout=capture5_log, stderr=capture5_log)
+    sleep(0.1)
     
     
 if stop:
 
     print 'Killing everything'
 
-    output0 = subprocess.Popen('ssh user@'+machine+' "source ~/.bashrc; killall -q cpheimdall.bash"',shell=True)
+    output0 = subprocess.Popen('ssh user@'+machine+' "source ~/.bashrc; killall -q dbnull"',shell=True)
     subprocess.Popen.wait(output0)
     
-    output0 = subprocess.Popen('ssh user@'+machine+' "source ~/.bashrc; killall -q dsaX_nicdb_tcp"',shell=True)
+    output0 = subprocess.Popen('ssh user@'+machine+' "source ~/.bashrc; killall -q dsaX_filflag"',shell=True)
     subprocess.Popen.wait(output0)
 
-    output0 = subprocess.Popen('ssh user@'+machine+' "source ~/.bashrc; killall -q dsaX_ftus"',shell=True)
+    output0 = subprocess.Popen('ssh user@'+machine+' "source ~/.bashrc; killall -q dsaX_dbmerge"',shell=True)
     subprocess.Popen.wait(output0)
 
-    output0 = subprocess.Popen('ssh user@'+machine+' "source ~/.bashrc; killall -q dsaX_flag"',shell=True)
+    output0 = subprocess.Popen('ssh user@'+machine+' "source ~/.bashrc; killall -q dsaX_spectrometer_udpdb_thread"',shell=True)
     subprocess.Popen.wait(output0)
 
-    output0 = subprocess.Popen('ssh user@'+machine+' "source ~/.bashrc; killall -q heimdall"',shell=True)
-    subprocess.Popen.wait(output0)

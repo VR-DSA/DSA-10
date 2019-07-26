@@ -36,6 +36,8 @@ def get_alt_az_at_meridian(ra,dec, site,year,month,day):
     altitude_at_meridian = np.max(altaz_FRB.alt)
     meridian_index = np.where(altaz_FRB.alt == altitude_at_meridian)[0]
     azimuth_at_meridian = altaz_FRB.az[meridian_index[0]]
+    #plt.plot(times,altaz_FRB.alt.value)
+    #plt.show()
     return altitude_at_meridian.degree, azimuth_at_meridian.degree
 
 def get_altaz_of_calibrators(calibrators_file,site):
@@ -51,6 +53,8 @@ def get_altaz_of_calibrators(calibrators_file,site):
     srcs = SkyCoord(calibrators.iloc[:,2],calibrators.iloc[:,3], frame='icrs')
     time_now = dt.datetime.now()
     altaz_srcs = srcs.transform_to(AltAz(obstime=time_now,location=site))
+    for i in range(len(srcs)):
+        print srcs.ra.value[i],altaz_srcs.alt.value[i],altaz_srcs.az.value[i]
     return altaz_srcs
 
 def get_calibrators_in_beam(sources,pointing_az,pointing_alt,time,site,tolerance):
@@ -101,8 +105,8 @@ if __name__ == '__main__':
     longitude = -118.283396 * u.deg
     elevation = 1222 * u.m
     pointing_year = 2019
-    pointing_month = 4
-    pointing_day = 1
+    pointing_month = 3
+    pointing_day = 17
     #calibrators_file = "C:/Users/boche/Documents/Work/DSA/calibrators/frb_calibrators.txt"
     calibrators_file = "frb_calibrators.txt"
     time_now = dt.datetime.now()

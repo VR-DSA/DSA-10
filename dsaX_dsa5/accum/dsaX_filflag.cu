@@ -330,7 +330,7 @@ int main (int argc, char *argv[]) {
   int ts_sum, ds_sum;
   // 11.8 is stddev of chi square with mean 64, 1 dof
   int thresh_ts = (int)((2048*64*BT)+(3.5*sqrt(2048.*BT*11.8)));
-  float thresh_diff = (0.5/sqrt(NSAMPS_GULP*1.));
+  float thresh_diff = (1./sqrt(NSAMPS_GULP*1.));
   float thresh_rms = 3.0;
   unsigned short repval = (unsigned short)(64);
   int clipthresh = (int)(64.*BT*BF+6.*sqrt(11.8*BT*BF));
@@ -635,6 +635,8 @@ int main (int argc, char *argv[]) {
 	return EXIT_FAILURE;
       }
 
+    ipcio_close_block_read (hdu_in->data_block, bytes_read);
+    
     // write to filterbank file
     if (filty)
       fwrite(outout_data,sizeof(unsigned short),NSAMPS_GULP*2048,output);

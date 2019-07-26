@@ -83,6 +83,7 @@ void usage()
 	   "dsaX_dbmerge [options]\n"
 	   " -c core   bind process to CPU core\n"
 	   " -db0-9    keys of dbs to merge\n"
+	   " -f        cautionary hardcoded flag\n"
 	   " -o        output db\n"
 	   " -h print usage\n");
 }
@@ -94,13 +95,18 @@ int main (int argc, char *argv[]) {
   multilog_t* log = 0;
   
   // command line arguments
-  key_t in_key0, in_key1, in_key2, in_key3, in_key4, in_key5, in_key6, in_key7, in_key8, in_key9, out_key; 
+  key_t in_key0, in_key1, in_key2, in_key3, in_key4, in_key5, in_key6, in_key7, in_key8, in_key9, out_key;
+  int cautFlag=0;
   int NDB = 0;
   int core=-1;
   for (int i=1;i<argc;i++) {
 
     if (strcmp(argv[i],"-c")==0) {
       core=atoi(argv[i+1]);
+    }
+
+    if (strcmp(argv[i],"-f")==0) {
+      cautFlag=1;
     }
 
     if (strcmp(argv[i],"-h")==0) {
@@ -147,7 +153,7 @@ int main (int argc, char *argv[]) {
       NDB++;
     }
 
-    if (strcmp(argv[i],"-db2=4")==0) {
+    if (strcmp(argv[i],"-db4")==0) {
       if (sscanf (argv[i+1], "%x", &in_key4) != 1) {
 	fprintf (stderr, "dada_db: could not parse key from %s\n", argv[i+1]);
 	return EXIT_FAILURE;
@@ -199,6 +205,8 @@ int main (int argc, char *argv[]) {
 
   log = multilog_open ("dsaX_dbmerge", 0);
   multilog_add (log, stderr);
+  multilog(log, LOG_INFO, "main: Starting up dbmerge with NDB %d\n",NDB);
+  
 
   // OPEN CONNECTION TO IN DBs
 
@@ -343,6 +351,8 @@ int main (int argc, char *argv[]) {
       return EXIT_FAILURE;
     }
   }
+  
+  multilog(log, LOG_INFO, "main: Connected to in DBs\n");
 
   // open connection to the out DB
 
@@ -366,49 +376,51 @@ int main (int argc, char *argv[]) {
     }
 
   bool observation_complete=0;
+  multilog(log, LOG_INFO, "main: Ready to read headers\n");
+  
 
   // read headers and clear them
   uint64_t header_size = 0;
   char *header_in;
   
   if (NDB>0) {
-    char * header_in = ipcbuf_get_next_read (hdu_in0->header_block, &header_size);
+    header_in = ipcbuf_get_next_read (hdu_in0->header_block, &header_size);
     ipcbuf_mark_cleared (hdu_in0->header_block);
   }
   if (NDB>1) {
-    char * header_in = ipcbuf_get_next_read (hdu_in1->header_block, &header_size);
+    header_in = ipcbuf_get_next_read (hdu_in1->header_block, &header_size);
     ipcbuf_mark_cleared (hdu_in1->header_block);
   }
   if (NDB>2) {
-    char * header_in = ipcbuf_get_next_read (hdu_in2->header_block, &header_size);
+    header_in = ipcbuf_get_next_read (hdu_in2->header_block, &header_size);
     ipcbuf_mark_cleared (hdu_in2->header_block);
   }
   if (NDB>3) {
-    char * header_in = ipcbuf_get_next_read (hdu_in3->header_block, &header_size);
+    header_in = ipcbuf_get_next_read (hdu_in3->header_block, &header_size);
     ipcbuf_mark_cleared (hdu_in3->header_block);
   }
   if (NDB>4) {
-    char * header_in = ipcbuf_get_next_read (hdu_in4->header_block, &header_size);
+    header_in = ipcbuf_get_next_read (hdu_in4->header_block, &header_size);
     ipcbuf_mark_cleared (hdu_in4->header_block);
   }
   if (NDB>5) {
-    char * header_in = ipcbuf_get_next_read (hdu_in5->header_block, &header_size);
+    header_in = ipcbuf_get_next_read (hdu_in5->header_block, &header_size);
     ipcbuf_mark_cleared (hdu_in5->header_block);
   }
   if (NDB>6) {
-    char * header_in = ipcbuf_get_next_read (hdu_in6->header_block, &header_size);
+    header_in = ipcbuf_get_next_read (hdu_in6->header_block, &header_size);
     ipcbuf_mark_cleared (hdu_in6->header_block);
   }
   if (NDB>7) {
-    char * header_in = ipcbuf_get_next_read (hdu_in7->header_block, &header_size);
+    header_in = ipcbuf_get_next_read (hdu_in7->header_block, &header_size);
     ipcbuf_mark_cleared (hdu_in7->header_block);
   }
   if (NDB>8) {
-    char * header_in = ipcbuf_get_next_read (hdu_in8->header_block, &header_size);
+    header_in = ipcbuf_get_next_read (hdu_in8->header_block, &header_size);
     ipcbuf_mark_cleared (hdu_in8->header_block);
   }
   if (NDB>9) {
-    char * header_in = ipcbuf_get_next_read (hdu_in9->header_block, &header_size);
+    header_in = ipcbuf_get_next_read (hdu_in9->header_block, &header_size);
     ipcbuf_mark_cleared (hdu_in9->header_block);
   }
 
@@ -418,6 +430,7 @@ int main (int argc, char *argv[]) {
   ipcbuf_mark_filled (hdu_out->header_block, header_size);
 
   // main reading loop
+  multilog(log, LOG_INFO, "main: Allocating memory\n");
   
   // other reading variables
   uint64_t  bytes_read = 0; // how many bytes were actually read
@@ -527,6 +540,16 @@ int main (int argc, char *argv[]) {
 	out_data[i] += in_data[i];
 
       ipcio_close_block_read (hdu_in9->data_block, bytes_read);
+    }
+
+    // do cautionary flag
+    if (cautFlag==1) {
+
+      for (int i=0;i<blocksize/2/2048;i++) {
+	for (int j=0;j<215;j++) out_data[i*2048+j] = 0;
+	for (int j=1889;j<2048;j++) out_data[i*2048+j] = 0;
+      }
+	
     }
 
     // write data to DADA buffer
